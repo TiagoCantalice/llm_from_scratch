@@ -1,1 +1,0 @@
-print("llm from scratch")
