@@ -1,0 +1,30 @@
+import tiktoken
+from gptdatasetv1 import GPTDatasetV1
+from torch.utils.data import DataLoader
+
+#Creating a function to create a dataloader
+
+def create_dataloader_v1(txt, batch_size=4, max_length=256, stride=28, shuffle=True, drop_last=True, num_workers=0):
+    tokenizer = tiktoken.get_encoding("gpt2")
+    dataset = GPTDatasetV1(txt, tokenizer, max_length, stride)
+    dataloader = DataLoader(dataset, 
+                            batch_size=batch_size,
+                            shuffle=shuffle,
+                            drop_last=drop_last,
+                            num_workers=num_workers)
+    return dataloader
+
+with open(r"C:\Users\canta\Google Drive\llm_from_scratch\llm_from_scratch\chapter_2\the-verdict.txt", "r", encoding='utf-8') as f:
+    text = f.read()
+
+# Instantiating the dataloader using the create_dataloader_v1 function
+
+dataloader = create_dataloader_v1(txt = text,
+                                  batch_size=1,
+                                  max_length=4,
+                                  stride=1,
+                                  shuffle=False)
+
+dataiter = iter(dataloader)
+first_batch = next(dataiter)    
+print(f"First batch inputs:\n{first_batch}")

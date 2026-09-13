@@ -1,0 +1,48 @@
+import tiktoken
+from gptdatasetv1 import GPTDatasetV1
+from torch.utils.data import DataLoader
+
+#Creating a function to create a dataloader
+
+def create_dataloader_v1(txt, batch_size=4, max_length=256, stride=28, shuffle=True, drop_last=True, num_workers=0):
+    tokenizer = tiktoken.get_encoding("gpt2")
+    dataset = GPTDatasetV1(txt, tokenizer, max_length, stride)
+    dataloader = DataLoader(dataset, 
+                            batch_size=batch_size,
+                            shuffle=shuffle,
+                            drop_last=drop_last,
+                            num_workers=num_workers)
+    return dataloader
+
+with open(r"C:\Users\canta\Google Drive\llm_from_scratch\llm_from_scratch\chapter_2\the-verdict.txt", "r", encoding='utf-8') as f:
+    text = f.read()
+
+# Instantiating the dataloader using the create_dataloader_v1 function
+# Using the values proposed by te exercise in the book
+
+max_length = [2, 8]
+stride = [1, 2]
+
+for ml in max_length:
+    for s in stride:
+        dataloader = create_dataloader_v1(txt = text,
+                                        batch_size=1,
+                                        max_length=ml,
+                                        stride=s,
+                                        shuffle=False)
+
+        dataiter = iter(dataloader)
+        first_batch = next(dataiter)
+        second_batch = next(dataiter)
+        print(f"First batch inputs with max_length={ml} and stride={s}:\n{first_batch}")
+        print(f"Second batch inputs with max_length={ml} and stride={s}:\n{second_batch}")
+
+# To remember
+
+# batch_size = number of samples per batch (samples per batch)
+# max_length = maximum length of each sample (maximum number of tokens per sample)
+
+# stride = number of tokens to move forward for the next sample (number of tokens to move)
+# Remember, stride moves forward related with the input tensors, not related with the target tensors. 
+# The target tensors are always the next token after the input tensor, because we built this using 
+# input_chunk and target_chunk with a difference of 1 token ahead.
