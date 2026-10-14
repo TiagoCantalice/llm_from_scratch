@@ -43,3 +43,30 @@ data_iter = iter(dataloader)
 inputs, targets = next(data_iter)  
 print(f"Token IDs:\n{inputs}")
 print(f"\nInputs shape:\n{inputs.shape}")
+
+### 
+
+token_embeddings = embedding_layer(inputs)
+print(f"\nToken embeddings shape:\n{token_embeddings.shape}")
+
+
+####
+
+#To remember : Input_emb = Position_emb + Token_emb
+
+#Token embeddings are the representations of the input tokens in a continuous vector space. 
+#Each token ID is mapped to a corresponding embedding vector, which captures semantic information about the token. 
+#The shape of the token embeddings tensor is determined by the batch size, sequence length (max_length), 
+#and the output dimension of the embedding layer.
+
+context_length = max_length
+pos_embedding_layer = torch.nn.Embedding(context_length, output_dim)
+pos_embeddings = pos_embedding_layer(torch.arange(context_length))
+print(f"\nPosition embeddings shape:\n{pos_embeddings.shape}")
+
+input_embeddings = token_embeddings + pos_embeddings
+print(f"\nInput embeddings shape:\n{input_embeddings.shape}")
+
+print(f"\nPosition embeddings:\n{pos_embeddings}")
+print(f"\nToken embeddings:\n{token_embeddings}")
+print(f"\nInput embeddings:\n{input_embeddings}")
