@@ -17,3 +17,4 @@ class SelfAttention_v1(nn.Module):
         attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1) #alpha
         context_vec = attn_weights @ values 
         return context_vec
+
